@@ -20,35 +20,33 @@ if len(select_names) > 0:
 else:
     select_names = df['Name'].unique()
 
-col1, col2 = st.columns(2)
-with col1:
-    fig = px.scatter(data_frame=df[df['Name'].isin(select_names)], 
-                    x='FG Att', 
-                    y='FG Pct', 
-                    size='FG Att',
-                    hover_name='Name',
-                    marginal_x='box',
-                    marginal_y='box',
-                    title='Current Active NFL Kickers (Career Stats)'
-    )
 
-    fig.update_yaxes(tickformat='%')
+fig = px.scatter(data_frame=df[df['Name'].isin(select_names)], 
+                x='FG Att', 
+                y='FG Pct', 
+                size='FG Att',
+                hover_name='Name',
+                marginal_x='box',
+                marginal_y='box',
+                title='Current Active NFL Kickers (Career Stats)'
+)
 
-    st.plotly_chart(fig)
+fig.update_yaxes(tickformat='%')
 
-with col2:
-    fig = px.scatter(data_frame=df[df['Name'].isin(select_names)], 
-                    x='FG Att', 
-                    y='FG Pct', 
-                    size='FG Att',
-                    color='Draft Status',
-                    hover_name='Name',
-                    title='Current Active NFL Kickers (Career Stats)'
-    )
+st.plotly_chart(fig)
 
-    fig.update_yaxes(tickformat='%')
+fig = px.scatter(data_frame=df[df['Name'].isin(select_names)], 
+                x='FG Att', 
+                y='FG Pct', 
+                size='FG Att',
+                color='Draft Status',
+                hover_name='Name',
+                title='Current Active NFL Kickers (Career Stats)'
+)
 
-    st.plotly_chart(fig)
+fig.update_yaxes(tickformat='%')
+
+st.plotly_chart(fig)
 
 # st.dataframe(df)
 
@@ -59,31 +57,28 @@ fg_by_distance = df[select_cols]
 fg_distance_df = (pd.melt(fg_by_distance, id_vars=['Name', 'Team'], 
                           var_name='Metric', value_name='Value'))
 
-col1, col2 = st.columns(2)
-with col1:
-    fig= px.box(data_frame=fg_distance_df[fg_distance_df['Name'].isin(select_names)],
-                x='Metric',
-                y='Value',
-                title='Current Active NFL Kickers Accuracy by Distance (Career Stats)'
-    )
+fig= px.box(data_frame=fg_distance_df[fg_distance_df['Name'].isin(select_names)],
+            x='Metric',
+            y='Value',
+            title='Current Active NFL Kickers Accuracy by Distance (Career Stats)'
+)
 
-    fig.update_yaxes(tickformat='%')
+fig.update_yaxes(tickformat='%')
 
-    st.plotly_chart(fig)        
+st.plotly_chart(fig)        
 
 weekly_df = pd.read_csv('https://raw.githubusercontent.com/jlinehan31/nfl_kickers/main/nfl_fg_weekly_2021')
 weekly_df_grouped = weekly_df.groupby('Week').sum().reset_index()
 weekly_df_grouped['PCT'] = weekly_df_grouped['FGM'] / weekly_df_grouped['FGA']
 
-with col2:
-    fig= px.scatter(data_frame=weekly_df_grouped,
-                    x='Week',
-                    y='PCT',
-                    size='FGA',
-                    trendline='ols',
-                    title='Combined Active NFL Kickers Accuracy by Week (2021)'
-    )
+fig= px.scatter(data_frame=weekly_df_grouped,
+                x='Week',
+                y='PCT',
+                size='FGA',
+                trendline='ols',
+                title='Combined Active NFL Kickers Accuracy by Week (2021)'
+)
 
-    fig.update_yaxes(tickformat='%')
-    
-    st.plotly_chart(fig)
+fig.update_yaxes(tickformat='%')
+
+st.plotly_chart(fig)
